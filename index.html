@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Mon chatbot GPT-3</title>
+  
+  <!-- Lien vers la bibliothèque JavaScript de l'API GPT-3 -->
+  <script src="https://cdn.jsdelivr.net/npm/@openai/api@0.6.2/build/web.js"></script>
+</head>
+<body>
+  <h1>Mon chatbot GPT-3</h1>
+  
+  <form id="chatbot-form">
+    <label for="user-input">Saisissez votre message :</label>
+    <input type="text" id="user-input">
+    <button type="submit">Envoyer</button>
+  </form>
+  
+  <h2>Réponses du chatbot :</h2>
+  <textarea id="chatbot-output" rows="10" cols="50" readonly></textarea>
+<div id="error-output"></div>
+  
+  <!-- JavaScript pour interagir avec l'API GPT-3 -->
+  <script>
+    // Remplacez "YOUR_API_KEY" par votre clé d'API GPT-3
+    const openaiApiKey = "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";
+
+    // Récupérer l'élément HTML pour le champ de saisie utilisateur et la zone de texte pour les réponses du chatbot
+    const userInput = document.getElementById("user-input");
+    const chatbotOutput = document.getElementById("chatbot-output");
+
+    // Écoutez l'événement de soumission de formulaire pour le champ de saisie utilisateur
+    document.getElementById("chatbot-form").addEventListener("submit", function(event) {
+      // Empêchez le formulaire de se soumettre normalement
+      event.preventDefault();
+
+      // Récupérez le texte entré par l'utilisateur
+      const inputText = userInput.value;
+
+      // Créez une requête à l'API GPT-3
+      openai.apiKey = openaiApiKey;
+      openai.complete({
+        engine: "davinci-codex",
+        prompt: inputText,
+        maxTokens: 2048,
+        n: 1,
+        stop: ["\n"]
+      })
+      .then(response => {
+        // Afficher la réponse du chatbot dans la zone de texte de sortie
+        chatbotOutput.value += response.choices[0].text;
+      })
+      .catch(error => console.error(error)); document.querySelector("#error-output").innerHTML = error;
+
+      // Effacer le champ de saisie utilisateur
+      //userInput.value = "";
+    });
+  </script>
+</body>
+</html>
